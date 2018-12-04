@@ -1,0 +1,69 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 d/cal/homes/lhoustau/workspace/SE204/TD_filtre_median/median/simulation
+T_opt
+!s110 1543924366
+VOhnVhF^A<HHlKo;0UP9e01
+04 6 4 work MCE_tb fast 0
+=1-5cf9dd6f369e-5c066a8d-f2ba4-66d1
+o-quiet -auto_acc_if_foreign -work work
+tCvgOpt 0 Stats "none"
+n@_opt
+OL;O;10.7a;67
+vMCE
+Z1 DXx6 sv_std 3 std 0 22 >9az<^>2ff9DAl3OFGaAf1
+!s110 1543924348
+!i10b 1
+!s100 :>ZA7z8ij?k7U33G]1EKT1
+IZOce2nS_oHQjoWXSD_JKI3
+Z2 VDg1SIo80bB@j0V0VzS_@n1
+!s105 MCE_sv_unit
+S1
+R0
+w1543924318
+8../src/MCE.sv
+F../src/MCE.sv
+L0 1
+Z3 OL;L;10.7a;67
+r1
+!s85 0
+31
+!s108 1543924347.000000
+!s107 ../src/MCE.sv|
+!s90 +acc|../src/MCE.sv|
+!i113 0
+Z4 o+acc -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+Z5 tCvgOpt 0
+n@m@c@e
+vMCE_tb
+R1
+!s110 1543924352
+!i10b 1
+!s100 VL2PzcYo4^QfCa`Rn0U<f0
+IAIN:YLb1UlC^i=14PM5QG2
+R2
+!s105 mce_tb_sv_unit
+S1
+R0
+w1543919496
+8../src/mce_tb.sv
+F../src/mce_tb.sv
+L0 1
+R3
+r1
+!s85 0
+31
+!s108 1543924352.000000
+!s107 ../src/mce_tb.sv|
+!s90 +acc|../src/mce_tb.sv|
+!i113 0
+R4
+R5
+n@m@c@e_tb
