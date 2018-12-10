@@ -4,7 +4,7 @@ logic BYP;
 enum logic [2:0] {S0, S1, S2, S3, S4} state, n_state;
 int tmp;
 
-MED #(.W(8)) med (.DI(DI), .DSI(DSI), .BYP(BYP), .CLK(CLK), .DO(DO));
+MED #(.W(W)) med (.DI(DI), .DSI(DSI), .BYP(BYP), .CLK(CLK), .DO(DO));
 
 
 //Processus de gestion du compteur tmp
@@ -13,7 +13,7 @@ always_ff @(posedge CLK or negedge nRST)
 		tmp <= 0;
 	else
 	begin
-		if (state == S0  & n_state == S4) 
+		if (state == S4  & n_state == S0) 
 			tmp <= 0;
 		else 
 			tmp <= tmp + 1;
@@ -25,15 +25,15 @@ always_ff @(posedge CLK or negedge nRST)
 		state <= S0 ;	
 	else begin
 		case (state)	
-	       	S0 : if (tmp == 9)
+	       	S0 : if (tmp == 8)
 			state <= S1; 
-		S1 : if (tmp == 18)
+		S1 : if (tmp == 17)
 			state <= S2;
-	       	S2 : if (tmp == 27)
+	       	S2 : if (tmp == 26)
 			state <= S3; 
-		S3 : if (tmp == 36)
+		S3 : if (tmp == 35)
 			state <= S4;
-		S4 : if (tmp == 40) begin
+		S4 : if (tmp == 39) begin
 			state <= S0;	
 		end
 		endcase
@@ -44,7 +44,7 @@ always_comb
 begin
 	if (state == S0) begin
 		DSO <= 0;
-		if(tmp < 9 ) begin
+		if(tmp < 8 ) begin
 			BYP <= 0; 
 		end
 		else begin
@@ -54,7 +54,7 @@ begin
 
 	if (state == S1) begin
 		DSO <= 0;
-		if(tmp < 17 ) begin
+		if(tmp < 16 ) begin
 			BYP <= 0;
 		end
 		else begin
@@ -64,19 +64,9 @@ begin
 
 	if (state == S2) begin
 		DSO <= 0;
-		if(tmp < 25 ) begin
+		if(tmp < 24 ) begin
 			BYP <= 0;
 		end
-		else begin
-			BYP <= 1;
-		end
-	end
-
-	if (state == S2) begin
-		DSO <= 0;
-		if(tmp < 34 ) begin
-			BYP <= 0;
-			end
 		else begin
 			BYP <= 1;
 		end
@@ -84,7 +74,7 @@ begin
 
 	if (state == S3) begin
 		DSO <= 0;
-		if(tmp < 42 ) begin
+		if(tmp < 32 ) begin
 			BYP <= 0;
 		end
 		else begin
