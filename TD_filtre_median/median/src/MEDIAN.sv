@@ -7,37 +7,42 @@ int tmp;
 MED #(.W(W)) med (.DI(DI), .DSI(DSI), .BYP(BYP), .CLK(CLK), .DO(DO));
 
 
-//Processus de gestion du compteur tmp
+//Processus de gestion de changement d'éat de l'automate à 5 états
+always_comb
+begin
+	n_state = state;
+	case (state)	
+	S0 : if (tmp == 8)
+		n_state <= S1;	
+	S1 : if (tmp == 17)
+		n_state <= S2;
+	S2 : if (tmp == 26)
+		n_state <= S3; 
+	S3 : if (tmp == 35)
+		n_state <= S4;
+	S4 : if (tmp == 39)
+		n_state <= S0;	
+	endcase
+end
+
+
+//Processus de gestion du compteur tmp et de changement d'état de l'automate
 always_ff @(posedge CLK or negedge nRST) 
-	if (!nRST)
+	if (!nRST) begin
+		state <= S0;
 		tmp <= 0;
+	end
 	else
 	begin
+		state <= n_state;
 		if (state == S4  & n_state == S0) 
 			tmp <= 0;
-		else 
+		else if (state == S0 & DSI == 0)
 			tmp <= tmp + 1;
+		else if (state == S0 & DSI == 1)
+			tmp <= tmp;
 	end
 
-//Processus de gestion de changement d'éat de l'automate à 5 états
-always_ff @(posedge CLK or negedge nRST) 
-	if (!nRST)
-		state <= S0 ;	
-	else begin
-		case (state)	
-	       	S0 : if (tmp == 8)
-			state <= S1; 
-		S1 : if (tmp == 17)
-			state <= S2;
-	       	S2 : if (tmp == 26)
-			state <= S3; 
-		S3 : if (tmp == 35)
-			state <= S4;
-		S4 : if (tmp == 39) begin
-			state <= S0;	
-		end
-		endcase
-	end
 //Processus combinatoire de gestion des signaux BYP et DSO en fonction de
 //l'état de l'automate
 always_comb
@@ -89,4 +94,3 @@ begin
 
 end
 endmodule
-
