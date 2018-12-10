@@ -1,9 +1,11 @@
-module MEDIAN #(parameter W = 8) (input [W-1:0] DI, input DSI, input nRST, input CLK, output [W-1:0] DO, output DSO);
+module MEDIAN #(parameter W = 8) (input [W-1:0] DI, input DSI, input nRST, input CLK, output [W-1:0] DO, output logic DSO);
+
+logic BYP;
+enum logic [2:0] {S0, S1, S2, S3, S4} state, n_state;
+int tmp;
 
 MED #(.W(8)) med (.DI(DI), .DSI(DSI), .BYP(BYP), .CLK(CLK), .DO(DO));
 
-enum logic [2:0] {S0, S1, S2, S3, S4} state, n_state;
-int tmp;
 
 //Processus de gestion du compteur tmp
 always_ff @(posedge CLK or negedge nRST) 
@@ -36,7 +38,8 @@ always_ff @(posedge CLK or negedge nRST)
 		end
 		endcase
 	end
-
+//Processus combinatoire de gestion des signaux BYP et DSO en fonction de
+//l'état de l'automate
 always_comb
 begin
 	if (state == S0) begin
