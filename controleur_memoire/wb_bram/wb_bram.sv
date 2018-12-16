@@ -11,7 +11,8 @@ module wb_bram #(parameter mem_adr_width = 11) (
       );
 
       logic[3:0][7:0] mem [0: 1 << mem_adr_width];
-      logic ack_r, ack_w;
+      logic ack_r, ack_w, tag;
+      logic [10:0] adr;
 
       //Mise à zéro des signaux de répétition et d'erreur
       assign wb_s.rty = 0;
@@ -26,17 +27,17 @@ module wb_bram #(parameter mem_adr_width = 11) (
 
 	      if (ack_r)
 	      begin
-		      if(tag==0 | tag == 3)
+		      if(tag == 0 | tag == 3)
 			      ack_r <= 0;
 		      else 
 			      ack_r <= ack_r;
+	      end
       end
       //On assigne le signal ACK de l'interface en fonction du signal WE
       assign wb_s.ack = wb_s.we ? ack_w : ack_r; 
 
       //Gestion du tag du signal CTI: la variable tag retransmet le mode
       //incrémental ou non
-      logic tag;
       always_comb
       begin
 	      if(ack_r)
@@ -50,30 +51,29 @@ module wb_bram #(parameter mem_adr_width = 11) (
 			      3'b010: tag = 2;
 			      //Fin du burst
 			      3'b111: tag = 3;
+			      default: tag = 0;
 		      endcase
 	      end
       end
 
-
-      //Incrémenteur d'adresse de l'esclave
-      logic [10:0] adr;
+      //Incrémenteur d'adresse de l'esclave 
       always_ff @(posedge wb_s.clk)
       begin
 	      adr = wb_s.adr[12:2];
-	      if( ack_r & tag == 2)
+	      if( ack_r & tag == 2) 
 	      begin
-			while(  ~ (ack_w & tag == 3)) begin
+	      		while(  ~ (ack_w & tag == 3)) begin
 				adr <= adr + 4;
 			end
 		end
 		
-	      else if( ack_r & (tag == 1 | tag == 0))
+	      if( ack_r & (tag == 1 | tag == 0)
 	      begin
-		      while(  ~ (ack_w & tag == 3)) begin
+	      		while(  ~ (ack_w & tag == 3)) begin
 				adr <= adr;
 			end
-		end
-	end	
+		end			
+	end
 
       //Procesus pour la mémoire synchrone
       always_ff @(posedge wb_s.clk)
