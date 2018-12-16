@@ -12,7 +12,7 @@ module wb_bram #(parameter mem_adr_width = 11) (
 
       logic[3:0][7:0] mem [0: 1 << mem_adr_width];
       logic ack_r, ack_w, tag;
-      logic [10:0] adr;
+      logic [10:0] adr, tmp_adr;
 
       //Mise à zéro des signaux de répétition et d'erreur
       assign wb_s.rty = 0;
@@ -56,24 +56,23 @@ module wb_bram #(parameter mem_adr_width = 11) (
 	      end
       end
 
-      //Incrémenteur d'adresse de l'esclave 
+      //Incrémenteur d'adresse de l'esclave
+      //Processus combinatoire de calcul d'adresse 
+      always_comb
+      begin
+	      tmp_adr = wb_s.adr[12:2];
+	      if( ack_r & tag == 2) 
+			tmp_adr = tmp_adr + 4;
+
+	      else if( ack_r & (tag == 1 | tag == 0))
+		      tmp_adr = tmp_adr;
+      end
+      //Processus sequentiel pour respecter le chemin critique
       always_ff @(posedge wb_s.clk)
       begin
-	      adr = wb_s.adr[12:2];
-	      if( ack_r & tag == 2) 
-	      begin
-	      		while(  ~ (ack_w & tag == 3)) begin
-				adr <= adr + 4;
-			end
-		end
-		
-	      if( ack_r & (tag == 1 | tag == 0)
-	      begin
-	      		while(  ~ (ack_w & tag == 3)) begin
-				adr <= adr;
-			end
-		end			
-	end
+	      adr <= tmp_adr;
+      end
+
 
       //Procesus pour la mémoire synchrone
       always_ff @(posedge wb_s.clk)
