@@ -25,10 +25,55 @@ module wb_bram #(parameter mem_adr_width = 11) (
 	      ack_r <= wb_s.stb & ~wb_s.we;
 
 	      if (ack_r)
-		      ack_r <= 0;
+	      begin
+		      if(tag==0 | tag == 3)
+			      ack_r <= 0;
+		      else 
+			      ack_r <= ack_r;
       end
       //On assigne le signal ACK de l'interface en fonction du signal WE
       assign wb_s.ack = wb_s.we ? ack_w : ack_r; 
+
+      //Gestion du tag du signal CTI: la variable tag retransmet le mode
+      //incrémental ou non
+      logic tag;
+      always_comb
+      begin
+	      if(ack_r)
+	      begin
+		      case(wb_s.cti)
+			      //Mode classique
+			      3'b000: tag = 0;
+			      //Mode burst avec adresse constante
+			      3'b001: tag = 1;
+			      //Mode burst avec incrémentation d'adresse
+			      3'b010: tag = 2;
+			      //Fin du burst
+			      3'b111: tag = 3;
+		      endcase
+	      end
+      end
+
+
+      //Incrémenteur d'adresse de l'esclave
+      logic [10:0] adr;
+      always_ff @(posedge wb_s.clk)
+      begin
+	      adr = wb_s.adr[12:2];
+	      if( ack_r & tag == 2)
+	      begin
+			while(  ~ (ack_w & tag == 3)) begin
+				adr <= adr + 4;
+			end
+		end
+		
+	      else if( ack_r & (tag == 1 | tag == 0))
+	      begin
+		      while(  ~ (ack_w & tag == 3)) begin
+				adr <= adr;
+			end
+		end
+	end	
 
       //Procesus pour la mémoire synchrone
       always_ff @(posedge wb_s.clk)
@@ -44,7 +89,7 @@ module wb_bram #(parameter mem_adr_width = 11) (
 		if(wb_s.sel[3])
 			mem[wb_s.adr[12:2]][3] <= wb_s.dat_ms[31:24] ;
 	end
-	wb_s.dat_sm <= mem[wb_s.adr[12:2]];
+	wb_s.dat_sm <= mem[adr];
 
 	end 
 endmodule
