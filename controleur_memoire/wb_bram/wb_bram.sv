@@ -62,7 +62,7 @@ module wb_bram #(parameter mem_adr_width = 11) (
       begin
 	      tmp_adr = wb_s.adr[12:2];
 	      if( ack_r & tag == 2) 
-			tmp_adr = tmp_adr + 4;
+			tmp_adr = tmp_adr + 1;
 
 	      else if( ack_r & (tag == 1 | tag == 0))
 		      tmp_adr = tmp_adr;
@@ -88,7 +88,8 @@ module wb_bram #(parameter mem_adr_width = 11) (
 		if(wb_s.sel[3])
 			mem[wb_s.adr[12:2]][3] <= wb_s.dat_ms[31:24] ;
 	end
-	wb_s.dat_sm <= mem[adr];
+	else
+		wb_s.dat_sm <= mem[adr];
 
 	end 
 endmodule
