@@ -21,7 +21,7 @@ module Top (
   logic 	      Q1;	 //Les signaux pour stabilité de pixel_rst	
 //Variable pour clignotement des LEDS en fonction de l'usage
 `ifdef SIMULATION
-	//On la fait clignoter 100 fois plus vite
+	//On la fait clignoter 100 fois plus vite pour la simulation
 	localparam hcmpt = 1000;
 `else
 	//Clignotement réel
@@ -92,13 +92,9 @@ always_ff @(posedge sys_clk or posedge sys_rst)
 begin
 	if (sys_rst)
 		cmp <= 0;
-	else
-		cmp <= cmp + 1;
-
-	if (cmp >= hcmpt)
-	begin
-		LED[1] <= ~LED[1];
-		cmp <= 0;
+	else begin
+		cmp <= (cmp >= hcmpt)? 0 : cmp+1;
+		LED[1] <= (cmp >= hcmpt)? ~LED[1]: LED[1];
 	end
 end
 
@@ -107,13 +103,9 @@ always_ff @(posedge pixel_clk or posedge pixel_rst)
 begin
 	if (pixel_rst)
 		cmp2 <= 0;
-	else
-		cmp2 <= cmp2 + 1;
-
-	if (cmp2 >= hcmpt)
-	begin
-		LED[2] <= ~LED[2];
-		cmp2 <= 0;
+	else begin
+		cmp2 <= (cmp2 >= hcmpt)? 0 : cmp2+1;
+		LED[2] <= (cmp2 >= hcmpt)? ~LED[2]: LED[2];
 	end
 end
 
