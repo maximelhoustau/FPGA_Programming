@@ -33,7 +33,7 @@ initial begin
 end
 
 initial begin
-	#40000;
+	#4000000;
 	$stop();
 end
 
