@@ -16,6 +16,13 @@ module Top (
   wire        sys_rst;   // Le signal de reset du système
   wire        sys_clk;   // L'horloge système a 100Mhz
   wire        pixel_clk; // L'horloge de la video 32 Mhz
+  logic cmp[16:0]; 	 // Pour une horloge de 1Hz
+
+`ifdef SIMULATION
+	localparam hcmpt = 1000;
+`else
+	localparam hcmpt = 100000;
+`endif
 
 //=======================================================
 //  La PLL pour la génération des horloges
@@ -73,6 +80,22 @@ assign wshb_if_sdram.bte = '0 ;
 //--------------------------
 //------- Code Eleves ------
 //--------------------------
+
+assign LED[0] = KEY[0];
+
+always_ff @(posedge sys_clk or posedge sys_rst)
+begin
+	if (sys_rst)
+		cmp <= 0;
+	else
+		cmp <= cmp + 1;
+
+	if (cmp >= hcmpt)
+	begin
+		LED[1] <= ~LED[1];
+		cmp <= 0;
+	end
+end
 
 
 

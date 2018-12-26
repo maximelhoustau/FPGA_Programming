@@ -20,7 +20,22 @@ Top Top0(.*) ;
 //  Code élèves
 //////////////////////////////
 
+initial begin
+	forever #10 FPGA_CLK1_50 = ~FPGA_CLK1_50;
+end
 
+initial begin
+	KEY[0] = 1;
+	#128;
+	KEY[0] = 0;
+	#128;
+	KEY[0] = 1;
+end
+
+initial begin
+	#40000;
+	$stop();
+end
 
 
 endmodule

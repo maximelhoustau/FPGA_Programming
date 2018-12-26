@@ -2,6 +2,7 @@
 #
 .PHONY: clean all simu_batch compile simu_gui info
 
+SIMULATION = 0
 # WORKDIR est le répertoire de simulation
 WORKDIR = $(shell pwd)/work
 # TOPDIR est le répertoire principal (le dépot git de vos travaux)
