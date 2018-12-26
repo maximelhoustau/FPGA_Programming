@@ -16,11 +16,15 @@ module Top (
   wire        sys_rst;   // Le signal de reset du système
   wire        sys_clk;   // L'horloge système a 100Mhz
   wire        pixel_clk; // L'horloge de la video 32 Mhz
-  logic cmp[16:0]; 	 // Pour une horloge de 1Hz
-
+  logic [16:0] cmp,cmp2; // Pour une horloge de 1Hz
+  logic	      pixel_rst; // Le signal de reset du bloc video
+  logic 	      Q1;	 //Les signaux pour stabilité de pixel_rst	
+//Variable pour clignotement des LEDS en fonction de l'usage
 `ifdef SIMULATION
+	//On la fait clignoter 100 fois plus vite
 	localparam hcmpt = 1000;
 `else
+	//Clignotement réel
 	localparam hcmpt = 100000;
 `endif
 
@@ -83,6 +87,7 @@ assign wshb_if_sdram.bte = '0 ;
 
 assign LED[0] = KEY[0];
 
+//Clignotement de la LED[1] sur sys_clk
 always_ff @(posedge sys_clk or posedge sys_rst)
 begin
 	if (sys_rst)
@@ -97,6 +102,33 @@ begin
 	end
 end
 
+//Clignotement de la LED[2] sur pixel_clk
+always_ff @(posedge pixel_clk or posedge pixel_rst)
+begin
+	if (pixel_rst)
+		cmp2 <= 0;
+	else
+		cmp2 <= cmp2 + 1;
 
+	if (cmp2 >= hcmpt)
+	begin
+		LED[2] <= ~LED[2];
+		cmp2 <= 0;
+	end
+end
+
+//Génération de pixel_rst
+always @(posedge pixel_clk)
+begin
+	if(sys_rst)
+	begin
+		Q1 <= 1;
+		pixel_rst <= 1;
+	end
+	else begin
+		Q1 <= 0;
+		pixel_rst <= Q1;
+	end	
+end
 
 endmodule
