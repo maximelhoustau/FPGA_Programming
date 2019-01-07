@@ -118,8 +118,8 @@ always @(posedge pixel_clk)
 begin
 	if(sys_rst)
 	begin
-		Q1 <= 1;
-		pixel_rst <= 1;
+		Q1 <= sys_rst;
+		pixel_rst <= sys_rst;
 	end
 	else begin
 		Q1 <= 0;
