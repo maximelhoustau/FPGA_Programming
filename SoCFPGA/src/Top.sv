@@ -16,16 +16,19 @@ module Top (
   wire        sys_rst;   // Le signal de reset du système
   wire        sys_clk;   // L'horloge système a 100Mhz
   wire        pixel_clk; // L'horloge de la video 32 Mhz
-  logic [16:0] cmp,cmp2; // Pour une horloge de 1Hz
+  logic [$clog2(hcmpt)-1:0] cmp;
+  logic [$clog2(hcmpt2)-1:0] cmp2;// Pour une horloge de 1Hz
   logic	      pixel_rst; // Le signal de reset du bloc video
   logic 	      Q1;	 //Les signaux pour stabilité de pixel_rst	
 //Variable pour clignotement des LEDS en fonction de l'usage
 `ifdef SIMULATION
 	//On la fait clignoter 100 fois plus vite pour la simulation
-	localparam hcmpt = 1000;
+	localparam hcmpt = 100;
+	localparam hcmpt2 = 32;
 `else
 	//Clignotement réel
-	localparam hcmpt = 100000000;
+	localparam hcmpt = 100_000_000;
+	localparam hcmpt2 = 32_000_000;
 `endif
 
 //=======================================================
@@ -52,7 +55,7 @@ hw_support hw_support_inst (
     .wshb_ifs (wshb_if_sdram),
     .wshb_ifm (wshb_if_stream),
     .hws_ifm  (hws_ifm),
-	.sys_rst  (sys_rst), // output
+    .sys_rst  (sys_rst), // output
     .SW_0     ( SW[0] ),
     .KEY      ( KEY )
  );
@@ -69,6 +72,7 @@ assign wshb_if_stream.rty =  1'b0 ;
 
 //=============================
 // On neutralise l'interface SDRAM
+// 
 // pour l'instant
 // A SUPPRIMER PLUS TARD
 //=============================
@@ -93,8 +97,8 @@ begin
 	if (sys_rst)
 		cmp <= 0;
 	else begin
-		cmp <= (cmp >= hcmpt-1)? 0 : cmp+1;
-		LED[1] <= (cmp >= hcmpt-1)? ~LED[1]: LED[1];
+		cmp <= (cmp == hcmpt-1)? 0 : cmp+1;
+		LED[1] <= (cmp == hcmpt-1)? ~LED[1]: LED[1];
 	end
 end
 
@@ -104,8 +108,8 @@ begin
 	if (pixel_rst)
 		cmp2 <= 0;
 	else begin
-		cmp2 <= (cmp2 >= hcmpt-1)? 0 : cmp2+1;
-		LED[2] <= (cmp2 >= hcmpt-1)? ~LED[2]: LED[2];
+		cmp2 <= (cmp2 == hcmpt2-1)? 0 : cmp2+1;
+		LED[2] <= (cmp2 == hcmpt2-1)? ~LED[2]: LED[2];
 	end
 end
 
