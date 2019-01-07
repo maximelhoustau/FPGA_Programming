@@ -5,7 +5,7 @@ module Top (
 	input  wire         FPGA_CLK1_50,
 	input  wire  [1:0]	KEY,
 	output logic [7:0]	LED,
-	input  wire	 [3:0]	SW,
+	input  wire  [3:0]	SW,
     // Les signaux du support matériel son regroupés dans une interface
     hws_if.master       hws_ifm
 );
@@ -16,10 +16,8 @@ module Top (
   wire        sys_rst;   // Le signal de reset du système
   wire        sys_clk;   // L'horloge système a 100Mhz
   wire        pixel_clk; // L'horloge de la video 32 Mhz
-  logic [$clog2(hcmpt)-1:0] cmp;
-  logic [$clog2(hcmpt2)-1:0] cmp2;// Pour une horloge de 1Hz
   logic	      pixel_rst; // Le signal de reset du bloc video
-  logic 	      Q1;	 //Les signaux pour stabilité de pixel_rst	
+
 //Variable pour clignotement des LEDS en fonction de l'usage
 `ifdef SIMULATION
 	//On la fait clignoter 100 fois plus vite pour la simulation
@@ -30,7 +28,10 @@ module Top (
 	localparam hcmpt = 100_000_000;
 	localparam hcmpt2 = 32_000_000;
 `endif
-
+//Pour une horloge de 1Hz
+logic [$clog2(hcmpt)-1:0] cmp; //clk a 100MHz
+logic [$clog2(hcmpt2)-1:0] cmp2;//clk a 23MHz
+ 
 //=======================================================
 //  La PLL pour la génération des horloges
 //=======================================================
@@ -115,7 +116,8 @@ end
 
 //Génération de pixel_rst
 always @(posedge pixel_clk)
-begin
+begin  
+	logic 	      Q1; //Signal pour stabilité de pixel_rst (entre 2 bascules)	
 	if(sys_rst)
 	begin
 		Q1 <= sys_rst;
