@@ -25,7 +25,7 @@ module Top (
 	localparam hcmpt = 1000;
 `else
 	//Clignotement réel
-	localparam hcmpt = 100000;
+	localparam hcmpt = 100000000;
 `endif
 
 //=======================================================
@@ -93,8 +93,8 @@ begin
 	if (sys_rst)
 		cmp <= 0;
 	else begin
-		cmp <= (cmp >= hcmpt)? 0 : cmp+1;
-		LED[1] <= (cmp >= hcmpt)? ~LED[1]: LED[1];
+		cmp <= (cmp >= hcmpt-1)? 0 : cmp+1;
+		LED[1] <= (cmp >= hcmpt-1)? ~LED[1]: LED[1];
 	end
 end
 
@@ -104,8 +104,8 @@ begin
 	if (pixel_rst)
 		cmp2 <= 0;
 	else begin
-		cmp2 <= (cmp2 >= hcmpt)? 0 : cmp2+1;
-		LED[2] <= (cmp2 >= hcmpt)? ~LED[2]: LED[2];
+		cmp2 <= (cmp2 >= hcmpt-1)? 0 : cmp2+1;
+		LED[2] <= (cmp2 >= hcmpt-1)? ~LED[2]: LED[2];
 	end
 end
 
