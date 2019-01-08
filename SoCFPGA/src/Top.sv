@@ -8,12 +8,12 @@ module Top #(parameter HDISP = 800, parameter VDISP = 480)
 	output logic [7:0]	LED,
 	input  wire  [3:0]	SW,
     // Les signaux du support matériel son regroupés dans une interface
-    hws_if.master       hws_ifm
+    hws_if.master       hws_ifm,
     video_if.master 	video_ifm
 );
 
 //Instanciation du module vga
-vga #(HDSIP, VDSIP) vga1 (.pixel_clk(pixel_clk), .pixel_rst(pixel_rst), .video_ifm(video_ifm))
+vga #(HDSIP, VDSIP) vga1 (.pixel_clk(pixel_clk), .pixel_rst(pixel_rst), .video_ifm(video_ifm));
 
 //====================================
 //  Déclarations des signaux internes
