@@ -6,8 +6,10 @@ module vga #(parameter HDISP = 800, parameter VDISP = 480)
 	video_if.master video_ifm );
 
 //Déclaration de signaux internes
-wire [$clog2(VSIZE)-1:0] lignes;  //Compteur de lignes
-wire [$clog2(HSIZE)-1:0] pixels; //Compteur de pixels
+logic [$clog2(VSIZE)-1:0] lignes;  //Compteur de lignes
+logic [$clog2(HSIZE)-1:0] pixels; //Compteur de pixels
+logic [$clog2(VDIS)-1:0] pixel_Y; //Coordonnée verticale du pixel actif
+logic [$clog2(HDIS)-1:0] pixel_X; //Coordonnée horizontale du pixel actif
 
 
 //Déclaration des paramètres locaux
@@ -21,6 +23,8 @@ localparam VSIZE = VDISP+VBP+VPULSE+VFP; //Taille verticale de l'écran
 localparam HSIZE = HDISP+HBP+HPULSE+HFP; //Taille horizontale de l'écran
 localparam VDIS = VFP+VPULSE+VBP; //Zone d'affichage vertical
 localparam HDIS = HFP+HPULSE+HBP; //Zone d'affichage horizontal
+localparam BLANC = {255,255,255}; //Couleur blanche de pixels
+localparam NOIR = {0,0,0}; //Couleur noire de pixels
 
 //Clock video
 assign video_ifm.CLK = pixel_clk;
@@ -59,5 +63,12 @@ begin
 		video_ifm.VS <= 0;	
 end
 
+//Génération de la mire de test et calcul des coordonnées du pixel actif
+always_ff @(posedge pixel_clk or posedge pixel_rst)
+begin
+	pixel_X <= pixels - (HDIS-1); 
+	pixel_Y <= lignes - (VDIS-1); 
+	video_ifm.RGB <= (pixel_X%16 == 0 | pixel_Y%16 == 0)? BLANC : NOIR;
+end
 
 endmodule
