@@ -8,8 +8,8 @@ module vga #(parameter HDISP = 800, parameter VDISP = 480)
 //Déclaration de signaux internes
 logic [$clog2(VSIZE)-1:0] lignes;  //Compteur de lignes
 logic [$clog2(HSIZE)-1:0] pixels; //Compteur de pixels
-logic [$clog2(VDIS)-1:0] pixel_Y; //Coordonnée verticale du pixel actif
-logic [$clog2(HDIS)-1:0] pixel_X; //Coordonnée horizontale du pixel actif
+logic [$clog2(VDISP)-1:0] pixel_Y; //Coordonnée verticale du pixel actif
+logic [$clog2(HDISP)-1:0] pixel_X; //Coordonnée horizontale du pixel actif
 
 
 //Déclaration des paramètres locaux
@@ -21,8 +21,8 @@ localparam VPULSE = 3; //Largeur de la sync image
 localparam VBP = 40; //Vertical Back Porch
 localparam VSIZE = VDISP+VBP+VPULSE+VFP; //Taille verticale de l'écran
 localparam HSIZE = HDISP+HBP+HPULSE+HFP; //Taille horizontale de l'écran
-localparam VDIS = VFP+VPULSE+VBP; //Zone d'affichage vertical
-localparam HDIS = HFP+HPULSE+HBP; //Zone d'affichage horizontal
+localparam VSUP = VFP+VPULSE+VBP; //Zone de suppression verticale
+localparam HSUP = HFP+HPULSE+HBP; //Zone de suppression horizontale
 localparam BLANC = {255,255,255}; //Couleur blanche de pixels
 localparam NOIR = {0,0,0}; //Couleur noire de pixels
 
@@ -44,31 +44,40 @@ begin
 end
 
 //Calcul des signaux de synchronisation
-//Syncronisation horizontale et transmission
+//Syncronisation horizontale
 always_ff @(posedge pixel_clk or posedge pixel_rst)
 begin
-	video_ifm.BLANK <= (pixels <= HDIS-1 | lignes <= VDIS-1)? 0 : 1;
-	if(pixels < HFP-1 | HPULSE-1 <= pixels < HDISP-1)
-		video_ifm.HS <= 1;
-	else if( HFP-1 <= pixels < HPULSE-1)
-		video_ifm.HS <= 0;	
+	if(HFP-1 < pixels && pixels < HFP+HPULSE)
+		video_ifm.HS <= 0;
+	else
+		video_ifm.HS <= 1;	
 end
 
 //Syncronisation verticale
 always_ff @(posedge pixel_clk or posedge pixel_rst)
 begin
-	if(lignes < VFP-1 | VPULSE-1 <= lignes < VDISP-1)
-		video_ifm.VS <= 1;
-	else if( VFP-1 <= lignes < VPULSE-1)
-		video_ifm.VS <= 0;	
+	if(VFP-1 < lignes && lignes < VFP+VPULSE)
+		video_ifm.VS <= 0;
+	else
+		video_ifm.VS <= 1;	
+end
+
+//Signal de transmission
+always_ff @(posedge pixel_clk or posedge pixel_rst)
+begin
+	if(pixels < HSUP || lignes < VSUP)
+		video_ifm.BLANK <= 0;
+	else
+		video_ifm.BLANK <= 1;
+
 end
 
 //Génération de la mire de test et calcul des coordonnées du pixel actif
 always_ff @(posedge pixel_clk or posedge pixel_rst)
 begin
-	pixel_X <= pixels - (HDIS-1); 
-	pixel_Y <= lignes - (VDIS-1); 
-	video_ifm.RGB <= (pixel_X%16 == 0 | pixel_Y%16 == 0)? BLANC : NOIR;
+	pixel_X <= pixels - (HSUP-1); 
+	pixel_Y <= lignes - (VSUP-1); 
+	video_ifm.RGB <= (pixel_X%16 == 0 || pixel_Y%16 == 0)? BLANC : NOIR;
 end
 
 endmodule

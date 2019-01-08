@@ -19,6 +19,10 @@ video_if video_if0();
 // Instance du module Top
 Top #(160,90) Top0(.FPGA_CLK1_50(FPGA_CLK1_50), .KEY(KEY), .LED(LED), .SW(SW), .hws_ifm(hws_ifm), .video_ifm(video_if0));
 
+//Instance du module screen
+screen #(.mode(13),.X(160),.Y(90)) screen0(.video_ifs(video_if0));
+
+
 ///////////////////////////////
 //  Code élèves
 //////////////////////////////
@@ -36,7 +40,7 @@ initial begin
 end
 
 initial begin
-	#4000000;
+	#4ms;
 	$stop();
 end
 
