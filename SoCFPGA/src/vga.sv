@@ -47,7 +47,7 @@ end
 //Syncronisation horizontale et transmission
 always_ff @(posedge pixel_clk or posedge pixel_rst)
 begin
-	video_ifm.BLANCK <= (pixels <= HDIS-1 | lignes <= VDIS-1)? 0 : 1;
+	video_ifm.BLANK <= (pixels <= HDIS-1 | lignes <= VDIS-1)? 0 : 1;
 	if(pixels < HFP-1 | HPULSE-1 <= pixels < HDISP-1)
 		video_ifm.HS <= 1;
 	else if( HFP-1 <= pixels < HPULSE-1)

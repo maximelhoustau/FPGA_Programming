@@ -7,7 +7,7 @@ module Top #(parameter HDISP = 800, parameter VDISP = 480)
 	input  wire  [1:0]	KEY,
 	output logic [7:0]	LED,
 	input  wire  [3:0]	SW,
-    // Les signaux du support matériel son regroupés dans une interface
+    // Les signaux du support matériel sont regroupés dans une interface
     hws_if.master       hws_ifm,
     video_if.master 	video_ifm
 );
@@ -17,7 +17,7 @@ module Top #(parameter HDISP = 800, parameter VDISP = 480)
 //====================================
   wire        sys_rst;   // Le signal de reset du système
   wire        sys_clk;   // L'horloge système a 100Mhz
-  wire        pixel_clk; // L'horloge de la video 32 Mhz
+  wire        pixel_clk; // L'horloge de la video 32Mhz
   logic	      pixel_rst; // Le signal de reset du bloc video
 
 //Instanciation du module vga
