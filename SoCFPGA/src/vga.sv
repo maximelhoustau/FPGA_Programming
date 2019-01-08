@@ -17,8 +17,8 @@ localparam HBP = 40; //Horizontal Back Porch
 localparam VFP = 12; //Vertical Front Porch
 localparam VPULSE = 3; //Largeur de la sync image
 localparam VBP = 40; //Vertical Back Porch
-localparam VSIZE = VDISP+VBP+VPULSE+VFP //Taille verticale de l'écran
-localparam HSIZE = HDISP+HBP+HPULSE+HFP //Taille horizontale de l'écran
+localparam VSIZE = VDISP+VBP+VPULSE+VFP; //Taille verticale de l'écran
+localparam HSIZE = HDISP+HBP+HPULSE+HFP; //Taille horizontale de l'écran
 localparam VDIS = VFP+VPULSE+VBP; //Zone d'affichage vertical
 localparam HDIS = HFP+HPULSE+HBP; //Zone d'affichage horizontal
 
@@ -30,7 +30,7 @@ always_ff @(posedge pixel_clk or posedge pixel_rst)
 begin
 	if(pixel_rst) begin
 		lignes <= 0;
-		colonnes <= 0;
+		pixels <= 0;
 	end
 	else begin
 		pixels <= (pixels == VSIZE-1)? 0 : pixels+1 ;
