@@ -23,8 +23,6 @@ localparam VSIZE = VDISP+VBP+VPULSE+VFP; //Taille verticale de l'écran
 localparam HSIZE = HDISP+HBP+HPULSE+HFP; //Taille horizontale de l'écran
 localparam VSUP = VFP+VPULSE+VBP; //Zone de suppression verticale
 localparam HSUP = HFP+HPULSE+HBP; //Zone de suppression horizontale
-localparam BLANC = {255,255,255}; //Couleur blanche de pixels
-localparam NOIR = {0,0,0}; //Couleur noire de pixels
 
 //Clock video
 assign video_ifm.CLK = pixel_clk;
@@ -37,24 +35,27 @@ begin
 		pixels <= 0;
 	end
 	else begin
-		pixels <= (pixels == VSIZE-1)? 0 : pixels+1 ;
-		lignes <= (pixels == VSIZE-1)? lignes+1 : lignes;
+		pixels <= (pixels == HSIZE-1)? 0 : pixels+1 ;
+		lignes <= (pixels == HSIZE-1)? lignes+1 : lignes;
+		//Retour à 0 à la fin du balayage
+		if(lignes == VSIZE)
+			lignes <= 0;
 
 	end
 end
 
 //Calcul des signaux de synchronisation
 //Syncronisation horizontale
-always_ff @(posedge pixel_clk or posedge pixel_rst)
+always_comb 
 begin
 	if(HFP-1 < pixels && pixels < HFP+HPULSE)
-		video_ifm.HS <= 0;
+		video_ifm.HS = 0;
 	else
-		video_ifm.HS <= 1;	
+		video_ifm.HS = 1;	
 end
 
 //Syncronisation verticale
-always_ff @(posedge pixel_clk or posedge pixel_rst)
+always_comb
 begin
 	if(VFP-1 < lignes && lignes < VFP+VPULSE)
 		video_ifm.VS <= 0;
@@ -63,7 +64,7 @@ begin
 end
 
 //Signal de transmission
-always_ff @(posedge pixel_clk or posedge pixel_rst)
+always_comb 
 begin
 	if(pixels < HSUP || lignes < VSUP)
 		video_ifm.BLANK <= 0;
@@ -73,11 +74,11 @@ begin
 end
 
 //Génération de la mire de test et calcul des coordonnées du pixel actif
-always_ff @(posedge pixel_clk or posedge pixel_rst)
+always_comb 
 begin
-	pixel_X <= pixels - (HSUP-1); 
-	pixel_Y <= lignes - (VSUP-1); 
-	video_ifm.RGB <= (pixel_X%16 == 0 || pixel_Y%16 == 0)? BLANC : NOIR;
+	pixel_X <= pixels - (HSUP); 
+	pixel_Y <= lignes - (VSUP); 
+	video_ifm.RGB <= (pixel_X%16 == 0 || pixel_Y%16 == 0)? {8'hff, 8'hff,8'hff}: {0,0,0};
 end
 
 endmodule
