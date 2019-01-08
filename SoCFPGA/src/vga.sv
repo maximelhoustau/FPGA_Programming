@@ -1,4 +1,4 @@
-module vga #parameter(HDISP = 800, VDISP = 480)
+module vga #(parameter HDISP = 800, parameter VDISP = 480)
 	//Longeur et largeur de l'image affichée
 	(
 	input wire pixel_clk,
