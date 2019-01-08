@@ -12,9 +12,6 @@ module Top #(parameter HDISP = 800, parameter VDISP = 480)
     video_if.master 	video_ifm
 );
 
-//Instanciation du module vga
-vga #(HDSIP, VDSIP) vga1 (.pixel_clk(pixel_clk), .pixel_rst(pixel_rst), .video_ifm(video_ifm));
-
 //====================================
 //  Déclarations des signaux internes
 //====================================
@@ -22,6 +19,9 @@ vga #(HDSIP, VDSIP) vga1 (.pixel_clk(pixel_clk), .pixel_rst(pixel_rst), .video_i
   wire        sys_clk;   // L'horloge système a 100Mhz
   wire        pixel_clk; // L'horloge de la video 32 Mhz
   logic	      pixel_rst; // Le signal de reset du bloc video
+
+//Instanciation du module vga
+vga #(HDISP, VDISP) vga1 (.pixel_clk(pixel_clk), .pixel_rst(pixel_rst), .video_ifm(video_ifm));
 
 //Variable pour clignotement des LEDS en fonction de l'usage
 `ifdef SIMULATION
