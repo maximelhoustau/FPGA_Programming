@@ -76,7 +76,7 @@ end
 //Génération de la mire de test et calcul des coordonnées du pixel actif
 always_comb 
 begin
-	pixel_X <= pixels - (HSUP); 
+	pixel_X <= pixels - (HSUP-1); 
 	pixel_Y <= lignes - (VSUP); 
 	video_ifm.RGB <= (pixel_X%16 == 0 || pixel_Y%16 == 0)? {8'hff, 8'hff,8'hff}: {0,0,0};
 end
