@@ -3,7 +3,8 @@ module vga #(parameter HDISP = 800, parameter VDISP = 480)
 	(
 	input wire pixel_clk,
 	input wire pixel_rst,
-	video_if.master video_ifm );
+	video_if.master video_ifm
+	wshb_if.master wshb_ifm );
 
 //Déclaration de signaux internes
 logic [$clog2(VSIZE)-1:0] lignes;  //Compteur de lignes
@@ -26,6 +27,16 @@ localparam HSUP = HFP+HPULSE+HBP; //Zone de suppression horizontale
 
 //Clock video
 assign video_ifm.CLK = pixel_clk;
+
+//Signaux de l'interface wshb_if
+wshb_ifm.dat_ms = 32'hBABECAFE;
+whsb_ifm.adr = '0;
+whsb_ifm.cyc = 1'b1;
+whsb_ifm.sel = 4'b1111;
+whsb_ifm.stb = 1'b1;
+whsb_ifm.we = 1'b1;
+whsb_ifm.cti = '0;
+whsb_ifm.bte = '0;
 
 //Compteur de lignes et de colonnes
 always_ff @(posedge pixel_clk or posedge pixel_rst)
