@@ -20,9 +20,6 @@ module Top #(parameter HDISP = 800, parameter VDISP = 480)
   wire        pixel_clk; // L'horloge de la video 32Mhz
   logic	      pixel_rst; // Le signal de reset du bloc video
 
-//Instanciation du module vga
-vga #(HDISP, VDISP) vga1 (.pixel_clk(pixel_clk), .pixel_rst(pixel_rst), .video_ifm(video_ifm), .wshb_ifm(wshb_if_sdram);
-
 //Variable pour clignotement des LEDS en fonction de l'usage
 `ifdef SIMULATION
 	//On la fait clignoter 100 fois plus vite pour la simulation
@@ -54,6 +51,11 @@ sys_pll  sys_pll_inst(
 wshb_if #( .DATA_BYTES(4)) wshb_if_sdram  (sys_clk, sys_rst);
 wshb_if #( .DATA_BYTES(4)) wshb_if_stream (sys_clk, sys_rst);
 
+
+//Instanciation du module vga
+vga #(HDISP, VDISP) vga1 (.pixel_clk(pixel_clk), .pixel_rst(pixel_rst), .video_ifm(video_ifm), .wshb_ifm(wshb_if_sdram));
+
+
 //=============================
 //  Le support matériel
 //=============================
@@ -71,18 +73,19 @@ hw_support hw_support_inst (
 // du flux video pour l'instant
 // A SUPPRIMER PLUS TARD
 //=============================
-/*
+
 assign wshb_if_stream.ack = 1'b1;
 assign wshb_if_stream.dat_sm = '0 ;
 assign wshb_if_stream.err =  1'b0 ;
 assign wshb_if_stream.rty =  1'b0 ;
-*/
+
 //=============================
 // On neutralise l'interface SDRAM
 // 
 // pour l'instant
 // A SUPPRIMER PLUS TARD
 //=============================
+/*
 assign wshb_if_sdram.stb  = 1'b0;
 assign wshb_if_sdram.cyc  = 1'b0;
 assign wshb_if_sdram.we   = 1'b0;
@@ -91,7 +94,7 @@ assign wshb_if_sdram.dat_ms = '0 ;
 assign wshb_if_sdram.sel = '0 ;
 assign wshb_if_sdram.cti = '0 ;
 assign wshb_if_sdram.bte = '0 ;
-
+*/
 //--------------------------
 //------- Code Eleves ------
 //--------------------------
