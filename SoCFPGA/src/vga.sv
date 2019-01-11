@@ -58,27 +58,27 @@ end
 always_comb
 begin
 	if(VFP-1 < lignes && lignes < VFP+VPULSE)
-		video_ifm.VS <= 0;
+		video_ifm.VS = 0;
 	else
-		video_ifm.VS <= 1;	
+		video_ifm.VS = 1;	
 end
 
 //Signal de transmission
 always_comb 
 begin
 	if(pixels < HSUP || lignes < VSUP)
-		video_ifm.BLANK <= 0;
+		video_ifm.BLANK = 0;
 	else
-		video_ifm.BLANK <= 1;
+		video_ifm.BLANK = 1;
 
 end
 
 //Génération de la mire de test et calcul des coordonnées du pixel actif
 always_comb 
 begin
-	pixel_X <= pixels - (HSUP-1); 
-	pixel_Y <= lignes - (VSUP); 
-	video_ifm.RGB <= (pixel_X%16 == 0 || pixel_Y%16 == 0)? {8'hff, 8'hff,8'hff}: {8'h0,8'h0,8'h0};
+	pixel_X = pixels - (HSUP); 
+	pixel_Y = lignes - (VSUP); 
+	video_ifm.RGB = (pixel_X%16 == 0 || pixel_Y%16 == 0)? {8'hff, 8'hff,8'hff}: {8'h0,8'h0,8'h0};
 end
 
 endmodule
