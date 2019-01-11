@@ -29,6 +29,7 @@ localparam HSUP = HFP+HPULSE+HBP; //Zone de suppression horizontale
 assign video_ifm.CLK = pixel_clk;
 
 //Signaux de l'interface wshb_if
+/*
 assign wshb_ifm.dat_ms = 32'hBABECAFE;
 assign wshb_ifm.adr = '0;
 assign wshb_ifm.cyc = 1'b1;
@@ -37,7 +38,7 @@ assign wshb_ifm.stb = 1'b1;
 assign wshb_ifm.we = 1'b1;
 assign wshb_ifm.cti = '0;
 assign wshb_ifm.bte = '0;
-
+*/
 //Compteur de lignes et de colonnes
 always_ff @(posedge pixel_clk or posedge pixel_rst)
 begin
@@ -90,6 +91,43 @@ begin
 	pixel_X = pixels - (HSUP); 
 	pixel_Y = lignes - (VSUP); 
 	video_ifm.RGB = (pixel_X%16 == 0 || pixel_Y%16 == 0)? {8'hff, 8'hff,8'hff}: {8'h0,8'h0,8'h0};
+end
+
+//Compteur pour coordonnées des pixels lus en mémoire
+logic[$clog2(HDISP)-1:0] X;
+logic[$clog2(VDISP)-1:0] Y;
+//Lecture en SDRAM
+assign wshb_ifm.cyc = 1'b1; //On sollicite l'esclave en permanence
+assign wshb_ifm.we = 1'b1; //Ecriture
+assign wshb_ifm.cti = '0; //Transfert classique
+assign wshb_ifm.bte = '0; 
+assign wshb_ifm.sel = 4'b1111; //4 octets à ecrire
+
+always_ff @(posedge wshb_ifm.clk or posedge wshb_ifm.rst)
+begin
+	logic [31:0] pixels;
+	//Lecture en continue
+	wshb_ifm.stb <= 1'b1;
+	if(wshb_ifm.rst)
+	begin
+		Y <= 0;
+		X <= 0;
+	end
+	else begin
+		//On attend la validation de l'esclave
+		do begin
+			wshb_ifm.stb <= 1'b1;
+			wshb_ifm.adr <= 4*(HDISP*Y + X);
+		end
+		while (~wshb_ifm.ack);
+
+		Y <= (X == HDISP)? Y+1 : Y;
+		X <= (X == HDISP)? 0 : X+1;
+		pixels <= wshb_ifm.dat_sm;
+		//Pour reboucler
+		if(Y == VDISP && X == HDISP)
+			Y <= 0;
+	end	
 end
 
 endmodule
