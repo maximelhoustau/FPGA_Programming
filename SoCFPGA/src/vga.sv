@@ -25,6 +25,21 @@ localparam HSIZE = HDISP+HBP+HPULSE+HFP; //Taille horizontale de l'écran
 localparam VSUP = VFP+VPULSE+VBP; //Zone de suppression verticale
 localparam HSUP = HFP+HPULSE+HBP; //Zone de suppression horizontale
 
+//Déclaration des signaux de la FIFO
+logic read;
+logic [31:0] rdata;
+logic rempty;
+logic [31:0] wdata;
+logic write;
+logic wfull;
+logic walmost_full;
+
+
+//Instanciation de la FIFO asynchrone
+async_fifo #(.DATA_WIDTH(32)) fifo (.rst(wshb_ifm.rst), .rclk(wshb_ifm.clk), .read(read), .rdata(rdata), .rempty(rempty), .wclk(wshb_ifm.clk), .wdata(wdata), .write(write), .wfull(wfull), .walmost_full(walmost_full));
+
+
+
 //Clock video
 assign video_ifm.CLK = pixel_clk;
 
@@ -105,9 +120,10 @@ assign wshb_ifm.sel = 4'b1111; //4 octets à ecrire
 assign wshb_ifm.adr = 4*(HDISP*Y + X);
 assign wshb_ifm.stb = 1'b1;
 
+assign wdata = wshb_ifm.dat_sm;
+
 always_ff @(posedge wshb_ifm.clk or posedge wshb_ifm.rst)
 begin
-	logic [31:0] pixels;
 	//Lecture en continue
 	if(wshb_ifm.rst)
 	begin
@@ -116,20 +132,23 @@ begin
 	end
 	else begin
 		//On attend la validation de l'esclave
-		if(wshb_ifm.ack)
+		if(wshb_ifm.ack && wfull ==0 )
 		begin
 			Y <= (X == HDISP)? Y+1 : Y;
 			X <= (X == HDISP)? 0 : X+1;
-			pixels <= wshb_ifm.dat_sm;
+			write <= 1'b1;
 	
 			//Pour reboucler
 			if(Y == VDISP && X == HDISP)
-			begin
 				Y <= 0;
-				X <= 0;
-			end
 		end
-	end	
+		else begin
+			write <= 1'b0;
+			X <= X;
+			Y <= Y;
+		end
+	end
 end
+
 
 endmodule
