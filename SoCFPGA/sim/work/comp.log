@@ -1,0 +1,9 @@
+QuestaSim-64 vlog 10.7a Compiler 2018.03 Mar 26 2018
+Start time: 16:17:18 on Jan 11,2019
+vlog "+acc" -l comp.log -timescale 1ns/1ps "+define+IMAGE_FILE="/cal/homes/lhoustau/workspace/2A/SE/SE204/maxime-lhoustau/SoCFPGA/tb_src/image.hex"" "+define+SIMULATION" /cal/homes/lhoustau/workspace/2A/SE/SE204/maxime-lhoustau/SoCFPGA/src/vga.sv 
+-- Compiling module vga
+
+Top level modules:
+	vga
+End time: 16:17:18 on Jan 11,2019, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0

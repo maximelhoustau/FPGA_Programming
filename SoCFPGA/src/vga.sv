@@ -25,6 +25,21 @@ localparam HSIZE = HDISP+HBP+HPULSE+HFP; //Taille horizontale de l'écran
 localparam VSUP = VFP+VPULSE+VBP; //Zone de suppression verticale
 localparam HSUP = HFP+HPULSE+HBP; //Zone de suppression horizontale
 
+
+//Instanciation du module FIFO
+async_fifo #(.DATA_WIDTH(32)) fifo (.rst(wshb_ifm.rst), .rclk(pixel_clk), .read(), .rdata(), .rempty(), .wclk(wshb_ifm.clk), .wdata(), .write(), .wfull(), .walmost_full());
+
+//Déclaration des signaux du module FIFO
+wire read;
+logic [31:0] rdata;
+logic rempty;
+wire wclk;
+wire [31:0] wdata;
+wire write;
+logic wfull;
+logic walmost_full;
+
+
 //Clock video
 assign video_ifm.CLK = pixel_clk;
 
@@ -105,7 +120,6 @@ assign wshb_ifm.sel = 4'b1111; //4 octets à ecrire
 
 always_ff @(posedge wshb_ifm.clk or posedge wshb_ifm.rst)
 begin
-	logic [31:0] pixels;
 	//Lecture en continue
 	wshb_ifm.stb <= 1'b1;
 	if(wshb_ifm.rst)
@@ -123,7 +137,8 @@ begin
 
 		Y <= (X == HDISP)? Y+1 : Y;
 		X <= (X == HDISP)? 0 : X+1;
-		pixels <= wshb_ifm.dat_sm;
+		//On ecrit dans la fifo la donnée lue par le bus Wishbone
+		wdata <= wshb_ifm.dat_sm;
 		//Pour reboucler
 		if(Y == VDISP && X == HDISP)
 			Y <= 0;

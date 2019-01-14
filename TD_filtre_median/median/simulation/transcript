@@ -1,0 +1,30 @@
+# vsim -c MEDIAN_tb 
+# Start time: 11:28:38 on Dec 10,2018
+# ** Note: (vsim-8009) Loading existing optimized design _opt
+# //  Questa Sim-64
+# //  Version 10.7a linux_x86_64 Mar 26 2018
+# //
+# //  Copyright 1991-2018 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  QuestaSim and its associated documentation contain trade
+# //  secrets and commercial or financial information that are the property of
+# //  Mentor Graphics Corporation and are privileged, confidential,
+# //  and exempt from disclosure under the Freedom of Information Act,
+# //  5 U.S.C. Section 552. Furthermore, this information
+# //  is prohibited from disclosure under the Trade Secrets Act,
+# //  18 U.S.C. Section 1905.
+# //
+# Loading sv_std.std
+# Loading work.MEDIAN_tb(fast)
+# Loading work.MEDIAN(fast)
+# Loading work.MED(fast)
+# Loading work.MUX(fast)
+# Loading work.REG(fast__1)
+# Loading work.MCE(fast)
+# Loading work.REG(fast)
+# Break key hit
+# Break in Module MEDIAN_tb at median-tb.sv line 21
+# Stopped at median-tb.sv line 21
+# End time: 11:28:53 on Dec 10,2018, Elapsed time: 0:00:15
+# Errors: 0, Warnings: 0
