@@ -138,9 +138,9 @@ begin
 end
 
 
-//La FIFO a-t-elle été vide au moins une fois avant la zone d'affichage
-logic first_read;
-logic fifo_full;
+//La FIFO a-t-elle été vide au moins une fois avant la zone d'affichage?
+logic first_read; //Signal donnant la réponse a la question precedente
+logic fifo_full; //Signal echantillonné de wfull
 
 always_comb
 begin
@@ -148,8 +148,8 @@ begin
 		first_read = 1'b1;
 end
 
-//Ecriture dans la FIFO
-always_ff @(posedge pixel_clk)
+//Lecture dans la FIFO
+always_ff @(posedge wshb_ifm.clk)
 begin
 	if(first_read)
 	begin
@@ -173,7 +173,7 @@ begin
 	logic Q1; //Signal entre les 2 bascules
 	if(pixel_rst)
 	begin
-		Q1 <= 1'b0;
+		Q1 <= wfull;
 		fifo_full <= wfull;
 	end
 	else begin 
