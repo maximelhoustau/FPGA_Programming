@@ -35,7 +35,7 @@ logic wfull;
 logic walmost_full;
 
 //Instanciation de la FIFO asynchrone
-async_fifo #(.DATA_WIDTH(32)) fifo (.rst(wshb_ifm.rst), .rclk(wshb_ifm.clk), .read(read), .rdata(rdata), .rempty(rempty), .wclk(wshb_ifm.clk), .wdata(wdata), .write(write), .wfull(wfull), .walmost_full(walmost_full));
+async_fifo #(.DATA_WIDTH(32)) fifo (.rst(wshb_ifm.rst), .rclk(pixel_clk), .read(read), .rdata(rdata), .rempty(rempty), .wclk(wshb_ifm.clk), .wdata(wdata), .write(write), .wfull(wfull), .walmost_full(walmost_full));
 
 //Clock video
 assign video_ifm.CLK = pixel_clk;
@@ -108,7 +108,7 @@ assign wshb_ifm.sel = 4'b1111; //4 octets à ecrire
 assign wshb_ifm.adr = 4*(HDISP*Y + X);
 assign wshb_ifm.stb = 1'b1;
 
-assign wdata = wshb_ifm.dat_sm;
+assign wdata = wshb_ifm.dat_sm; //Les données renvoyées par l'esclave sont écrites en fifo
 always_ff @(posedge wshb_ifm.clk or posedge wshb_ifm.rst)
 begin
 	//Lecture en continue
@@ -173,7 +173,7 @@ begin
 	logic Q1; //Signal entre les 2 bascules
 	if(pixel_rst)
 	begin
-		Q1 <= wfull;
+		Q1 <= 1'b0;
 		fifo_full <= wfull;
 	end
 	else begin 
