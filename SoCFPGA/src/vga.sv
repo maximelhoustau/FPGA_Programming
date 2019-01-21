@@ -138,9 +138,17 @@ end
 //La FIFO a-t-elle été vide au moins une fois avant la zone d'affichage?
 logic first_read; //Signal donnant la réponse a la question precedente
 logic fifo_full; //Signal echantillonné de wfull
+logic write_enable;
 
 assign read = video_ifm.BLANK;
-assign video_ifm.RGB = rdata[23:0];
+
+always_ff @(posedge pixel_clk)
+begin
+	if(fifo_full)
+		write_enable <= 1;
+	if(write_enable && read)
+		video_ifm.RGB <= rdata[23:0];
+end
 
 //Strategie R1 pour passer wfull dans le domaine de pixel_clk
 //2 bascules dans le domaine de pixel_clk
