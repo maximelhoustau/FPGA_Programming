@@ -1,0 +1,5 @@
+add wave tb_Top/Top0/vga1/*
+add wave tb_Top/Top0/wshb_if_sdram/*
+add wave tb_Top/Top0/vga1/fifo/*
+
+run -all

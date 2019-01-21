@@ -1,0 +1,62 @@
+# //  Questa Sim-64
+# //  Version 10.7a linux_x86_64 Mar 26 2018
+# //
+# //  Copyright 1991-2018 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  QuestaSim and its associated documentation contain trade
+# //  secrets and commercial or financial information that are the property of
+# //  Mentor Graphics Corporation and are privileged, confidential,
+# //  and exempt from disclosure under the Freedom of Information Act,
+# //  5 U.S.C. Section 552. Furthermore, this information
+# //  is prohibited from disclosure under the Trade Secrets Act,
+# //  18 U.S.C. Section 1905.
+# //
+# vsim -lib work -L altera_lnsim_ver tb_Top 
+# Start time: 18:02:05 on Jan 15,2019
+# ** Note: (vsim-8009) Loading existing optimized design _opt
+# Loading sv_std.std
+# Loading work.tb_Top(fast)
+# Loading work.hws_if(fast)
+# Loading work.video_if(fast)
+# Loading work.Top(fast)
+# Loading work.sys_pll(fast)
+# Loading work.sys_pll_0002(fast)
+# Loading altera_lnsim_ver.altera_generic_pll_functions(fast)
+# Loading altera_lnsim_ver.altera_lnsim_functions(fast)
+# Loading altera_lnsim_ver.altera_pll(fast)
+# Loading work.wshb_if(fast)
+# Loading work.wshb_if(fast__1)
+# Loading work.vga(fast)
+# Loading work.async_fifo(fast)
+# Loading work.hw_support(fast)
+# Loading work.sim_hw_support(fast)
+# Loading work.tpg_video(fast)
+# Loading work.wb_ram_ctl(fast)
+# Loading work.ram(fast)
+# Loading work.pkg_vga(fast)
+# Loading work.screen_sv_unit(fast)
+# Loading work.screen(fast)
+source Simu_gui
+# Info: =================================================
+# Info:           Generic PLL Summary
+# Info: =================================================
+# Time scale of (tb_Top.Top0.sys_pll_inst.sys_pll_inst.altera_pll_i.new_model.gpll.no_need_to_gen) is  1ps /  1ps
+# Info: hierarchical_name = tb_Top.Top0.sys_pll_inst.sys_pll_inst.altera_pll_i.new_model.gpll.no_need_to_gen
+# Info: reference_clock_frequency = 50.0 MHz
+# Info: output_clock_frequency = 800 MHZ
+# Info: phase_shift = 0 ps
+# Info: duty_cycle = 50
+# Info: sim_additional_refclk_cycles_to_lock = 0
+# Info: output_clock_high_period = 625.000000
+# Info: output_clock_low_period = 625.000000
+# ** Warning: (vsim-PLI-3408) Too few data words read on line 16385 of file "/cal/homes/lhoustau/workspace/2A/SE/SE204/maxime-lhoustau/SoCFPGA/tb_src/image.hex". Expected 1048576, found 16384.    : /cal/homes/lhoustau/workspace/2A/SE/SE204/maxime-lhoustau/SoCFPGA/tb_src/ram.sv(25)
+#    Time: 0 ps  Iteration: 0  Region: /tb_Top/Top0/hw_support_inst/sim_hw_support0/wb_ram_ctl_inst/ram_inst/genblk1
+# dump de l'image :          1
+# dump de l'image :          2
+# dump de l'image :          3
+# ** Note: $stop    : /cal/homes/lhoustau/workspace/2A/SE/SE204/maxime-lhoustau/SoCFPGA/tb_src/tb_Top.sv(44)
+#    Time: 4 ms  Iteration: 0  Instance: /tb_Top
+# Break in Module tb_Top at /cal/homes/lhoustau/workspace/2A/SE/SE204/maxime-lhoustau/SoCFPGA/tb_src/tb_Top.sv line 44
+# End time: 18:04:15 on Jan 15,2019, Elapsed time: 0:02:10
+# Errors: 0, Warnings: 1

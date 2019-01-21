@@ -1,0 +1,162 @@
+{
+	"partitions" : [
+		{
+			"name" : "Top",
+			"pins" : [
+				{
+					"name" : "LED[0]",
+					"strict" : false
+				},
+				{
+					"name" : "LED[1]",
+					"strict" : false
+				},
+				{
+					"name" : "LED[2]",
+					"strict" : false
+				},
+				{
+					"name" : "video_ifm.RGB[0]",
+					"strict" : false
+				},
+				{
+					"name" : "video_ifm.RGB[1]",
+					"strict" : false
+				},
+				{
+					"name" : "video_ifm.RGB[2]",
+					"strict" : false
+				},
+				{
+					"name" : "video_ifm.RGB[3]",
+					"strict" : false
+				},
+				{
+					"name" : "video_ifm.RGB[4]",
+					"strict" : false
+				},
+				{
+					"name" : "video_ifm.RGB[5]",
+					"strict" : false
+				},
+				{
+					"name" : "video_ifm.RGB[6]",
+					"strict" : false
+				},
+				{
+					"name" : "video_ifm.RGB[7]",
+					"strict" : false
+				},
+				{
+					"name" : "video_ifm.RGB[8]",
+					"strict" : false
+				},
+				{
+					"name" : "video_ifm.RGB[9]",
+					"strict" : false
+				},
+				{
+					"name" : "video_ifm.RGB[10]",
+					"strict" : false
+				},
+				{
+					"name" : "video_ifm.RGB[11]",
+					"strict" : false
+				},
+				{
+					"name" : "video_ifm.RGB[12]",
+					"strict" : false
+				},
+				{
+					"name" : "video_ifm.RGB[13]",
+					"strict" : false
+				},
+				{
+					"name" : "video_ifm.RGB[14]",
+					"strict" : false
+				},
+				{
+					"name" : "video_ifm.RGB[15]",
+					"strict" : false
+				},
+				{
+					"name" : "video_ifm.RGB[16]",
+					"strict" : false
+				},
+				{
+					"name" : "video_ifm.RGB[17]",
+					"strict" : false
+				},
+				{
+					"name" : "video_ifm.RGB[18]",
+					"strict" : false
+				},
+				{
+					"name" : "video_ifm.RGB[19]",
+					"strict" : false
+				},
+				{
+					"name" : "video_ifm.RGB[20]",
+					"strict" : false
+				},
+				{
+					"name" : "video_ifm.RGB[21]",
+					"strict" : false
+				},
+				{
+					"name" : "video_ifm.RGB[22]",
+					"strict" : false
+				},
+				{
+					"name" : "video_ifm.RGB[23]",
+					"strict" : false
+				},
+				{
+					"name" : "video_ifm.BLANK",
+					"strict" : false
+				},
+				{
+					"name" : "video_ifm.VS",
+					"strict" : false
+				},
+				{
+					"name" : "video_ifm.HS",
+					"strict" : false
+				},
+				{
+					"name" : "KEY[0]",
+					"strict" : false
+				}
+			]
+		},
+		{
+			"name" : "hw_support_par",
+			"pins" : [
+				{
+					"name" : "hws_ifm.HDMI_I2C_SDA",
+					"strict" : false
+				},
+				{
+					"name" : "hws_ifm.HDMI_I2C_SCL",
+					"strict" : false
+				},
+				{
+					"name" : "KEY[0]",
+					"strict" : false
+				},
+				{
+					"name" : "KEY[1]",
+					"strict" : false
+				},
+				{
+					"name" : "SW[0]",
+					"strict" : false
+				},
+				{
+					"name" : "hws_ifm.HDMI_TX_INT",
+					"strict" : false
+				}
+			]
+		}
+	]
+}
