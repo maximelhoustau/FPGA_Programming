@@ -106,9 +106,9 @@ assign wshb_ifm.cti = 3'b10; //Transfert classique
 assign wshb_ifm.bte = '0; 
 assign wshb_ifm.sel = 4'b1111; //4 octets à ecrire
 assign wshb_ifm.adr = 4*(HDISP*Y + X);
-assign wshb_ifm.stb = 1'b1;
 
 assign wdata = wshb_ifm.dat_sm; //Les données renvoyées par l'esclave sont écrites en fifo
+assign write = wshb_ifm.ack;
 always_ff @(posedge wshb_ifm.clk or posedge wshb_ifm.rst)
 begin
 	//Lecture en continue
@@ -121,65 +121,50 @@ begin
 		//On attend la validation de l'esclave
 		if(wshb_ifm.ack && wfull ==0 )
 		begin
-			Y <= (X == HDISP)? Y+1 : Y;
-			X <= (X == HDISP)? 0 : X+1;
-			write <= 1'b1;
+			Y <= (X == HDISP-1)? Y+1 : Y;
+			X <= (X == HDISP-1)? 0 : X+1;
 	
 			//Pour reboucler
-			if(Y == VDISP && X == HDISP)
+			if(Y == VDISP-1 && X == HDISP-1)
 				Y <= 0;
 		end
 		else begin
-			write <= 1'b0;
 			X <= X;
 			Y <= Y;
 		end
 	end
 end
 
-
 //La FIFO a-t-elle été vide au moins une fois avant la zone d'affichage?
 logic first_read; //Signal donnant la réponse a la question precedente
 logic fifo_full; //Signal echantillonné de wfull
 
-always_comb
-begin
-	if(fifo_full && video_ifm.BLANK)
-		first_read = 1'b1;
-end
-
-//Lecture dans la FIFO
-always_ff @(posedge wshb_ifm.clk)
-begin
-	if(first_read)
-	begin
-		if(video_ifm.BLANK >= 0)
-		begin
-			read <= 1'b1;
-			video_ifm.RGB <= rdata;
-		end
-		else
-			read <= 1'b0;
-	end
-	else
-		read <= 1'b0;
-	
-end
+assign read = video_ifm.BLANK;
+assign video_ifm.RGB = rdata[23:0];
 
 //Strategie R1 pour passer wfull dans le domaine de pixel_clk
 //2 bascules dans le domaine de pixel_clk
-always_ff @(posedge pixel_clk or pixel_rst)
+always_ff @(posedge pixel_clk or posedge pixel_rst)
 begin
 	logic Q1; //Signal entre les 2 bascules
 	if(pixel_rst)
 	begin
-		Q1 <= wfull;
-		fifo_full <= wfull;
+		Q1 <= 0;
+		fifo_full <= 0;
 	end
 	else begin 
 		Q1 <= wfull;
 		fifo_full <= Q1;
 	end
 end
+
+//On gère les requetes avec stb
+always_comb begin
+	wshb_ifm.stb = 1;
+	//Si FIFO pleine
+	if(fifo_full)
+		wshb_ifm.stb = 0;
+end
+
 
 endmodule
