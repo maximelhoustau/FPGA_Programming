@@ -6,12 +6,6 @@ module vga #(parameter HDISP = 800, parameter VDISP = 480)
 	video_if.master video_ifm,
 	wshb_if.master wshb_ifm );
 
-//Déclaration de signaux internes
-logic [$clog2(VSIZE)-1:0] lignes;  //Compteur de lignes
-logic [$clog2(HSIZE)-1:0] pixels; //Compteur de pixels
-logic [$clog2(VDISP)-1:0] pixel_Y; //Coordonnée verticale du pixel actif
-logic [$clog2(HDISP)-1:0] pixel_X; //Coordonnée horizontale du pixel actif
-
 
 //Déclaration des paramètres locaux
 localparam HFP = 40; // Horizontal Front Porch
@@ -24,6 +18,14 @@ localparam VSIZE = VDISP+VBP+VPULSE+VFP; //Taille verticale de l'écran
 localparam HSIZE = HDISP+HBP+HPULSE+HFP; //Taille horizontale de l'écran
 localparam VSUP = VFP+VPULSE+VBP; //Zone de suppression verticale
 localparam HSUP = HFP+HPULSE+HBP; //Zone de suppression horizontale
+
+//Déclaration de signaux internes
+logic [$clog2(VSIZE)-1:0] lignes;  //Compteur de lignes
+logic [$clog2(HSIZE)-1:0] pixels; //Compteur de pixels
+logic [$clog2(VDISP)-1:0] pixel_Y; //Coordonnée verticale du pixel actif
+logic [$clog2(HDISP)-1:0] pixel_X; //Coordonnée horizontale du pixel actif
+
+
 
 //Déclaration des signaux de la FIFO
 logic read;
